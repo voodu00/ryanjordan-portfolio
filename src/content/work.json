@@ -1,9 +1,37 @@
 [
-  {
-    "id": 1,
-    "duration": "2024 - present",
-    "company": "Astro Community",
-    "title": "Astro Theme",
-    "description": "Existing as an Astro theme for anyone to use."
-  }
+	{
+		"id": 1,
+		"duration": "Jan 2024 - Present",
+		"company": "SOSI, Inc.",
+		"title": "Senior Frontend Developer",
+		"description": "Developing and maintaining web applications using React.js and other related technologies. Collaborating with cross-functional teams including designers, product managers, and other developers to create high-quality products. Implementing responsive design and ensuring cross-browser compatibility. Participating in code reviews and providing constructive feedback to other developers."
+	},
+	{
+		"id": 2,
+		"duration": "June 2023 - Jan 2024",
+		"company": "nouSystems, Inc.",
+		"title": "Lead Senior Frontend Developer",
+		"description": "Developing a frontend web app using Angular v14, improving the development team's productivity by an average of 10%. Adding NgRx state management to the application, allowing for better maintainability and scalability. Refactoring codebase, utilizing various design patterns and adopting best practices to distribute the workload and to ensure scalability of the product. Increasing the browser compatibility of the web app by implementing solutions for existing browser errors. Improving test coverage using Jest, allowing us to easily refactor and add features to the application and improve automation of existing QA testing"
+	},
+	{
+		"id": 3,
+		"duration": "Feb 2019 - Apr 2023",
+		"company": "Suzy, Inc.",
+		"title": "Senior Frontend Developer",
+		"description": "Developing and maintaining web applications using Angular and other related technologies. Collaborating with cross-functional teams including designers, product managers, and other developers to create high-quality products. Implementing responsive design and ensuring cross-browser compatibility. Participating in code reviews and providing constructive feedback to other developers."
+	},
+	{
+		"id": 4,
+		"duration": "Aug 2015 - Feb 2019",
+		"company": "Army Game Studio",
+		"title": "Web Developer",
+		"description": "Design and develop well-tested web applications using Angular 5, TypeScript, RxJS and NgRx to communicate with provided REST APIs. Monitor and verify code quality of tasks completed by other web developers and give feedback and advice when needed. Determine appropriate architecture, technical solutions and provide those recommendations to project owners. Ensure all web applications under active development remain up-to-date with the latest web technologies."
+	},
+	{
+		"id": 5,
+		"duration": "Mar 2013 - Aug 2015",
+		"company": "Freelance",
+		"title": "Web Developer",
+		"description": "Design and develop custom websites and applications for diverse clients using Next.js, Angular, and React. Implement full-stack solutions, including API integration and server-side logic, primarily using Node.js and Express. Offer maintenance and upgrade services for existing websites, enhancing functionality and ensuring security best practices. Collaborate closely with clients to understand their business needs, delivering highly tailored solutions that drive engagement and growth. Stay abreast of the latest web technologies and trends to provide clients with innovative and effective solutions."
+	}
 ]

@@ -1,7 +1,7 @@
 ---
 import '../styles/index.css';
 
-import ProfilePicture from '../assets/pfp.png';
+import ProfilePicture from '../assets/logo.png';
 
 import Card from '../components/Card.astro';
 import Layout from '../layouts/Layout.astro';
@@ -10,7 +10,7 @@ import Icon from '../components/Icon.astro';
 import { getCollection } from 'astro:content';
 import { getEntry } from 'astro:content';
 import { render } from 'astro:content';
-import { name, openGraph } from 'spectre:globals';
+import { openGraph } from 'spectre:globals';
 
 const [posts, projects, about, workExperience, quickInfo, socials] = await Promise.all([
 	getCollection('posts', (post) => post.data.draft !== true),
@@ -26,14 +26,13 @@ const { Content: About } = await render(about!);
 ---
 
 <Layout
-	title={openGraph.home.title || name}
+	title={openGraph.home.title}
 	description={openGraph.home.description}
 	pagefindIgnore
 >
 	<div class="layout-grid-left" slot="left">
 		<Card class="flex-col-card">
-			<ImageGlow quality={100} width={80} height={80} src={ProfilePicture} alt="Louis looking out of a window" loading='eager' />
-			<h2>{name}</h2>
+			<ImageGlow quality={100} height={120} src={ProfilePicture} alt="Ryan Jordan logo" loading='eager' class="profile-logo" />
 			<ul class="overview-list">
 				{quickInfo.map((info) => (
 					<li>
@@ -41,6 +40,17 @@ const { Content: About } = await render(about!);
 						<span>{info.data.text}</span>
 					</li>
 				))}
+			</ul>
+		</Card>
+		<Card>
+			<h3 class="no-mt">Contact</h3>
+			<ul class="overview-list">
+				<li>
+					<a href="mailto:me@ryanjordan.dev" class="socials-link">
+						<Icon type="lucide" name="mail" width={24} height={24} class='glow-icon' />
+						<span>me@ryanjordan.dev</span>
+					</a>
+				</li>
 			</ul>
 		</Card>
 		<Card>
@@ -107,7 +117,7 @@ const { Content: About } = await render(about!);
 				<h2>Work Experience</h2>
 			</div>
 			<div class="work-experience-container">
-				{workExperience.reverse().map((entry) => (
+				{workExperience.map((entry) => (
 					<div class="work-experience-entry">
 						<span class="work-experience-duration">{entry.data.duration}</span>
 						<h3 class="work-experience-company">{entry.data.company}</h3>

@@ -1,0 +1,125 @@
+---
+title: 'Self-Hosting n8n on Linode: A Saga of Docker, Caddy, Cloudflare, and Triumphant Tunnels'
+description: 'How to self-host n8n on Linode with Docker, Caddy, and Cloudflare Tunnel. A complete guide from setup to troubleshooting.'
+createdAt: 2025-07-20T00:00:00Z
+image: '../assets/light-bulb.jpeg'
+tags:
+  - n8n
+  - docker
+  - caddy
+  - cloudflare
+  - self-hosting
+  - linode
+draft: false
+---
+
+Hey folks, Ryan here – your friendly neighborhood full-stack dev with over a decade of wrestling code into submission. If you've been following my blog, you know I love diving into tools that make our lives easier, whether it's whipping up e-commerce integrations or automating the mundane. Today, I'm sharing a fresh adventure: setting up n8n (that awesome open-source workflow automation tool) on a self-hosted Linode server. What started as a simple weekend project turned into a troubleshooting epic, complete with firewall fights, timeout terrors, and a heroic rescue by Cloudflare Tunnel. If you're a dev looking to automate freelance gig hunting (or anything else), this one's for you. Grab a coffee – it's a bit of a ride.
+
+### The Mission: Why n8n and Self-Hosting?
+
+As a senior dev juggling a full-time job and a 3D print farm side hustle, I'm always on the hunt for ways to automate the grind. n8n caught my eye for its low-code/no-code workflows that can chain APIs, AI, and more – perfect for scanning Reddit's r/forhire for gigs without manual drudgery. I wanted to self-host it on my existing 4GB Linode (already running GitHub runners) for control and cost (free core software, minimal VPS expense).
+
+The plan: Docker for isolation, Caddy for reverse proxy and HTTPS, Cloudflare for DNS and protection. Sounded straightforward... until it wasn't.
+
+### Step 1: Docker Setup – The Easy Part
+
+I kicked off with Docker Compose in /opt/n8n. The yaml was basic: pull the latest n8n image, map volumes for persistence, expose to localhost:5678, and set env vars for timezone (America/Chicago – shoutout to my Central Time zone peeps) and basic auth. Used a .env file for secrets to keep passwords safe (no plain text in yaml!).
+
+```
+services:
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:latest
+    restart: always
+    ports:
+      - '127.0.0.1:5678:5678'
+    environment:
+      - N8N_HOST=${N8N_HOST}
+      - N8N_PORT=${N8N_PORT}
+      - N8N_PROTOCOL=${N8N_PROTOCOL}
+      - WEBHOOK_URL=${WEBHOOK_URL}
+      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
+      - N8N_BASIC_AUTH_ACTIVE=${N8N_BASIC_AUTH_ACTIVE}
+      - N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER}
+      - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD}
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=${N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS}
+      - N8N_RUNNERS_ENABLED=${N8N_RUNNERS_ENABLED}
+    volumes:
+      - ./.n8n:/home/node/.n8n
+      - /opt/n8n/local-files:/files
+    command: start
+```
+
+`docker compose up -d` and... it ran! Logs showed n8n ready on port 5678. Local curl worked fine. High-five moment.
+
+### Step 2: Caddy for Proxy and HTTPS – Where Things Got Sticky
+
+Next, installed Caddy on the host for easy HTTPS (on-demand TLS) and proxying to localhost:5678. Caddyfile looked solid:
+
+```
+n8n.super-secret-domain.com {
+    reverse_proxy localhost:5678 {
+        transport http {
+            read_timeout 300s
+            write_timeout 300s
+        }
+        header_up Upgrade $http_upgrade
+        header_up Connection "Upgrade"
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+    }
+    encode gzip
+    header {
+        -Server
+    }
+    tls {
+        on_demand
+    }
+}
+```
+
+Reloaded Caddy, and logs showed cert issuance success. But accessing https://n8n.super-secret-domain.com? 522 errors from Cloudflare (connection timeout). Turned out UFW was blocking 80/443. Whitelisted Cloudflare IPs:
+
+```
+for ip in $(curl -s https://www.cloudflare.com/ips-v4); do ufw allow from $ip to any port 80,443 proto tcp; done
+for ip in $(curl -s https://www.cloudflare.com/ips-v6); do ufw allow from $ip to any port 80,443 proto tcp; done
+ufw reload
+```
+
+That fixed 522... only to hit 524 (origin timeout). n8n was slow on first load (SQLite init, perhaps), exceeding Cloudflare's 100s limit. Added timeouts to Caddy, purged cache, created Page Rules for bypass caching on /rest and /webhook. Still no joy. Logs showed i/o timeouts in Caddy.
+
+### The Turning Point: Firewall Fiascos and Endless Logs
+
+Hours of debugging: SIGTERM restarts in Docker logs (resource contention from runners?), permissions warnings (fixed with `N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true`), URL mismatches (added `N8N_EDITOR_BASE_URL=https://n8n.super-secret-domain.com/`). Direct access (DNS Only mode) worked after a long wait, but proxying through Cloudflare kept timing out. It was frustrating – I just wanted to automate my Reddit gig hunt!
+
+### The Hero: Cloudflare Tunnel to the Rescue
+
+After exhausting firewall tweaks and Caddy optimizations, I switched to Cloudflare Tunnel. It's outbound-only, so no open ports or firewall worries – perfect for self-hosting without exposure. Setup was straightforward:
+
+- Install cloudflared: Added the repo and `apt install cloudflared`.
+- Authenticate: `cloudflared tunnel login`.
+- Create tunnel: `cloudflared tunnel create n8n`.
+- Config in ~/.cloudflared/config.yml:
+  ```
+  tunnel: n8n
+  credentials-file: /root/.cloudflared/your-tunnel-id.json
+  ingress:
+    - hostname: n8n.super-secret-domain.com
+      service: http://localhost:5678
+    - service: http_status:404
+  ```
+- Route DNS: `cloudflared tunnel route dns n8n n8n.super-secret-domain.com` (deleted conflicting A record first).
+- Run as service: `cloudflared service install && systemctl start cloudflared`.
+
+Boom – https://n8n.super-secret-domain.com loaded the create account screen. No more timeouts! The tunnel encrypted everything end-to-end, bypassed Caddy issues, and kept my server secure.
+
+### Lessons Learned and Why It Matters
+
+This journey reminded me why I love (and sometimes curse) self-hosting: full control, but expect gremlins. Key takeaways:
+
+- Start with tunnels for self-hosted tools – they're safer and simpler than manual proxies.
+- Always check firewalls first (UFW got me good).
+- n8n is powerful for automation (next up: Reddit gig scanner), but optimize for initial loads.
+
+If you're setting up n8n, give Cloudflare Tunnel a shot – it saved my sanity. Drop a comment if you have questions or your own war stories. Until next time, keep coding!

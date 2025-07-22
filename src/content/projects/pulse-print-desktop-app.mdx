@@ -1,0 +1,124 @@
+---
+title: PulsePrint Desktop
+date: 2025-06-17
+description: A desktop application for monitoring and managing Bambu Lab 3D printer farms using MQTT integration, built with React and Tauri/Rust.
+image: '../assets/PulsePrint-Alpha.png'
+info:
+  - text: React
+    icon:
+      type: simple-icons
+      name: react
+  - text: Tauri
+    icon:
+      type: simple-icons
+      name: tauri
+  - text: Rust
+    icon:
+      type: simple-icons
+      name: rust
+  - text: MQTT
+    icon:
+      type: simple-icons
+      name: mqtt
+  - text: SQLite
+    icon:
+      type: simple-icons
+      name: sqlite
+  - text: TypeScript
+    icon:
+      type: simple-icons
+      name: typescript
+---
+
+A comprehensive desktop application for monitoring and managing Bambu Lab 3D printer farms. PulsePrint Desktop provides real-time monitoring, statistics, and management capabilities for small to medium-scale 3D printing operations through MQTT integration.
+
+## Project Overview
+
+PulsePrint Desktop is designed to streamline the management of 3D printer farms by providing a centralized dashboard for monitoring multiple printers simultaneously. The application connects directly to Bambu Lab printers via MQTT over TLS, offering real-time status updates, temperature monitoring, and progress tracking.
+
+## Current Features (Alpha)
+
+### 🖥️ Core Dashboard
+
+- **Real-time Printer Monitoring**: Live status updates for connected 3D printers
+- **Statistics Overview**: Aggregate metrics and printer fleet insights
+- **Printer Cards**: Individual printer status with visual indicators
+- **Auto-refresh**: Configurable refresh intervals (15s - 5min)
+
+### 🔧 Printer Management
+
+- **Add Printer Dialog**: Manual printer configuration
+- **Import/Export Settings**: Support for JSON, CSV, YAML, and TXT formats
+- **MQTT Integration**: Direct connection to Bambu Lab printers via MQTT over TLS (port 8883)
+- **Mock Service**: Development mode with simulated printer data
+
+### 🎨 Display & UI
+
+- **Dark/Light Mode**: Theme switching with system preference support
+- **Temperature Display**: Hotend and bed temperature monitoring
+- **Progress Details**: Layer information and time remaining
+- **Responsive Design**: Optimized for various screen sizes
+- **Compact View**: Space-efficient layout option
+
+### 🔔 Notifications & Alerts
+
+- **Idle Printer Alerts**: Visual flashing for inactive printers
+- **Error Printer Alerts**: Red glow animations for error states
+- **Visual Feedback**: Real-time status indicators
+
+### ⚙️ Settings & Configuration
+
+- **Persistent Settings**: Local storage with unsaved changes detection
+- **Connection Management**: MQTT configuration for real printers
+- **Data Management**: Import/export functionality
+- **System Preferences**: Auto-refresh, intervals, and display options
+
+## Technical Stack
+
+- **Frontend**: React with TypeScript for a modern, type-safe user interface
+- **Backend**: Rust with Tauri for native desktop application capabilities
+- **Communication**: MQTT over TLS for real-time printer communication
+- **Data Storage**: SQLite for local printer configurations and settings
+- **Cross-Platform**: Native builds for Windows, macOS, and Linux
+- **State Management**: React Context for application state management
+
+## Development Roadmap
+
+### Phase 1: Testing & Stability
+
+- Unit test coverage (80%+ target)
+- Integration test suite for backend communication
+- End-to-end test framework
+- Performance testing with multiple printers
+- Error handling and graceful degradation
+
+### Phase 2: Core Feature Expansion
+
+- Grid/List layout switching with drag-and-drop
+- Persistent notification history
+- Inventory tracking and filament monitoring
+- Maintenance scheduling and print count tracking
+- Enhanced UI customization options
+
+### Phase 3: Advanced Features
+
+- License-based SaaS model (Free/Pro/Enterprise tiers)
+- Advanced analytics and performance insights
+- Fleet management capabilities
+- Team collaboration features
+- API access for third-party integrations
+
+## Planned Open Source Release
+
+The application is planned for open source release in the coming months, with free downloads available for Linux, macOS, and Windows. The project demonstrates modern desktop application development practices using web technologies while maintaining native performance and capabilities.
+
+## Business Model Considerations
+
+While initially planned as an open source project, the application includes infrastructure for a potential SaaS model with:
+
+- License key validation system
+- Premium features (Pro/Enterprise tiers)
+- Minimal server communication requirements
+- Offline capability for core functionality
+
+This project showcases advanced desktop application development skills, real-time communication protocols, and the ability to create professional tools for specialized industries.

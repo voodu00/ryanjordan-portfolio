@@ -1,11 +1,12 @@
 ---
 import Icon from "./Icon.astro";
-import { name } from 'spectre:globals';
 
 const path = Astro.url.pathname;
 ---
 <nav>
-  <a class="site-title" href="/">{name}</a>
+  <a class="site-title" href="/">
+    <img src="/favicon.svg" alt="Logo" class="nav-logo" />
+  </a>
   <ul>
     <li>
       <a href="/blog" class:list={{ active: path.startsWith('/blog') }}>Blog</a>
@@ -170,6 +171,14 @@ const path = Astro.url.pathname;
     text-decoration: none;
     font-size: 1.25em;
     z-index: 2;
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-logo {
+    height: 32px;
+    width: auto;
+    filter: brightness(0) invert(1);
   }
 
   nav ul {

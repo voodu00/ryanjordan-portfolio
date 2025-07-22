@@ -1,0 +1,137 @@
+---
+title: PulsePrint CLI
+date: 2025-07-01
+description: A command-line interface application for monitoring and managing Bambu Lab 3D printer farms, built with Rust and based on the PulsePrint Desktop application.
+image: '../assets/light-bulb.jpeg'
+info:
+  - text: Rust
+    icon:
+      type: simple-icons
+      name: rust
+  - text: CLI
+    icon:
+      type: lucide
+      name: terminal
+  - text: MQTT
+    icon:
+      type: simple-icons
+      name: mqtt
+  - text: Open Source
+    icon:
+      type: lucide
+      name: github
+---
+
+A command-line interface application for monitoring and managing Bambu Lab 3D printer farms. PulsePrint CLI provides the same core functionality as the desktop application but optimized for terminal environments, automation, and server deployments.
+
+## Project Overview
+
+PulsePrint CLI is a lightweight, fast command-line tool designed for users who prefer terminal-based workflows or need to integrate 3D printer monitoring into automated systems. Built entirely in Rust, it offers the same MQTT-based printer communication as the desktop version with a focus on efficiency and scriptability.
+
+## Planned Features
+
+### 🖥️ Core Functionality
+
+- **Real-time Printer Monitoring**: Live status updates via terminal output
+- **Printer Fleet Management**: Add, remove, and configure multiple printers
+- **Status Commands**: Quick status checks for individual or all printers
+- **Statistics Display**: Aggregate metrics and printer fleet insights
+- **JSON Output**: Structured data output for automation and scripting
+
+### 🔧 Printer Management
+
+- **Configuration Management**: Add and manage printer configurations
+- **Import/Export**: Support for JSON, YAML, and CSV formats
+- **MQTT Integration**: Direct connection to Bambu Lab printers via MQTT over TLS
+- **Connection Testing**: Validate printer connectivity and settings
+
+### 📊 Monitoring & Reporting
+
+- **Live Monitoring**: Real-time status updates with configurable intervals
+- **Temperature Tracking**: Hotend and bed temperature monitoring
+- **Progress Reporting**: Layer information and time remaining
+- **Alert System**: Notifications for idle printers, errors, and completion
+- **Logging**: Comprehensive logging for debugging and monitoring
+
+### ⚙️ Configuration & Automation
+
+- **Configuration Files**: YAML/JSON-based configuration management
+- **Environment Variables**: Support for environment-based configuration
+- **Script Integration**: Designed for use in automation scripts and CI/CD pipelines
+- **Docker Support**: Containerized deployment for server environments
+
+## Technical Stack
+
+- **Language**: Rust for performance and cross-platform compatibility
+- **Communication**: MQTT over TLS for real-time printer communication
+- **Configuration**: YAML/JSON for flexible configuration management
+- **Output Formats**: JSON, YAML, and human-readable terminal output
+- **Cross-Platform**: Native builds for Windows, macOS, and Linux
+- **Dependencies**: Minimal external dependencies for easy deployment
+
+## Development Phases
+
+### Phase 1: Core CLI Framework
+
+- Basic CLI structure with command parsing
+- MQTT connection and printer communication
+- Basic status and monitoring commands
+- Configuration file support
+
+### Phase 2: Advanced Features
+
+- Printer management commands (add, remove, configure)
+- Real-time monitoring with configurable output formats
+- Alert system and notification handling
+- Import/export functionality
+
+### Phase 3: Automation & Integration
+
+- JSON output for automation scripts
+- Docker containerization
+- CI/CD pipeline integration examples
+- Comprehensive documentation and examples
+
+## Use Cases
+
+### 🖥️ Local Development
+
+- Quick printer status checks during development
+- Integration with development workflows
+- Local monitoring without GUI overhead
+
+### 🏢 Server Environments
+
+- Headless server monitoring
+- Integration with monitoring systems
+- Automated alerting and reporting
+
+### 🔧 Automation & Scripting
+
+- CI/CD pipeline integration
+- Automated testing and validation
+- Custom monitoring and alerting scripts
+
+### 📊 Data Collection
+
+- Structured data output for analysis
+- Integration with data collection systems
+- Historical data tracking and reporting
+
+## Open Source Commitment
+
+PulsePrint CLI will be completely open source with no commercialization plans. The project aims to:
+
+- Provide a free, community-driven tool for 3D printer management
+- Foster collaboration and contributions from the 3D printing community
+- Share knowledge and best practices for MQTT-based printer communication
+- Support both individual users and small-scale printer farms
+
+## Planned Release Timeline
+
+- **Planning Phase**: Current (July 2025)
+- **Core Development**: August-September 2025
+- **Beta Release**: October 2025
+- **v1.0 Release**: November 2025
+
+This project demonstrates the ability to create efficient, cross-platform command-line tools while leveraging experience from desktop application development. It showcases Rust programming skills, MQTT communication protocols, and commitment to open source software development.

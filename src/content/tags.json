@@ -1,5 +1,92 @@
 [
-  {
-    "id": "guide"
-  }
+	{
+		"id": "guide"
+	},
+	{
+		"id": "angular"
+	},
+	{
+		"id": "jest"
+	},
+	{
+		"id": "docs"
+	},
+	{
+		"id": "open-source"
+	},
+	{
+		"id": "beginner"
+	},
+	{
+		"id": "email"
+	},
+	{
+		"id": "material"
+	},
+	{
+		"id": "angular-cli"
+	},
+	{
+		"id": "web-development"
+	},
+	{
+		"id": "flexbox"
+	},
+	{
+		"id": "ghost"
+	},
+	{
+		"id": "docker"
+	},
+	{
+		"id": "personal"
+	},
+	{
+		"id": "update"
+	},
+	{
+		"id": "react"
+	},
+	{
+		"id": "hooks"
+	},
+	{
+		"id": "unit-tests"
+	},
+	{
+		"id": "hugo"
+	},
+	{
+		"id": "wercker"
+	},
+	{
+		"id": "node"
+	},
+	{
+		"id": "javascript"
+	},
+	{
+		"id": "jquery"
+	},
+	{
+		"id": "dom"
+	},
+	{
+		"id": "n8n"
+	},
+	{
+		"id": "caddy"
+	},
+	{
+		"id": "cloudflare"
+	},
+	{
+		"id": "self-hosting"
+	},
+	{
+		"id": "linode"
+	},
+	{
+		"id": "digital-ocean"
+	}
 ]
