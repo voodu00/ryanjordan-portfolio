@@ -1,8 +1,8 @@
 ---
 title: 'Self-Hosting n8n on Linode: A Saga of Docker, Caddy, Cloudflare, and Triumphant Tunnels'
 description: 'How to self-host n8n on Linode with Docker, Caddy, and Cloudflare Tunnel. A complete guide from setup to troubleshooting.'
-createdAt: 2025-07-20T00:00:00Z
-image: '../assets/light-bulb.jpeg'
+createdAt: 2025-07-14:00:00Z
+image: '../assets/n8n.jpg'
 tags:
   - n8n
   - docker
@@ -13,11 +13,11 @@ tags:
 draft: false
 ---
 
-Hey folks, Ryan here – your friendly neighborhood full-stack dev with over a decade of wrestling code into submission. If you've been following my blog, you know I love diving into tools that make our lives easier, whether it's whipping up e-commerce integrations or automating the mundane. Today, I'm sharing a fresh adventure: setting up n8n (that awesome open-source workflow automation tool) on a self-hosted Linode server. What started as a simple weekend project turned into a troubleshooting epic, complete with firewall fights, timeout terrors, and a heroic rescue by Cloudflare Tunnel. If you're a dev looking to automate freelance gig hunting (or anything else), this one's for you. Grab a coffee – it's a bit of a ride.
+If you've been following my blog, you know I love diving into tools that make our lives easier, whether it's whipping up e-commerce integrations or automating the mundane. Today, I'm sharing a fresh adventure: setting up n8n (that awesome open-source workflow automation tool) on a self-hosted Linode server. What started as a simple weekend project turned into a troubleshooting epic, complete with firewall fights, timeout terrors, and a heroic rescue by Cloudflare Tunnel. If you're a dev looking to automate freelance gig hunting (or anything else), this one's for you. Grab a coffee – it's a bit of a ride.
 
 ### The Mission: Why n8n and Self-Hosting?
 
-As a senior dev juggling a full-time job and a 3D print farm side hustle, I'm always on the hunt for ways to automate the grind. n8n caught my eye for its low-code/no-code workflows that can chain APIs, AI, and more – perfect for scanning Reddit's r/forhire for gigs without manual drudgery. I wanted to self-host it on my existing 4GB Linode (already running GitHub runners) for control and cost (free core software, minimal VPS expense).
+As a dev juggling a full-time job and a 3D print farm side hustle, I'm always on the hunt for ways to automate the grind. n8n caught my eye for its low-code/no-code workflows that can chain APIs, AI, and more – perfect for scanning Reddit's r/forhire for gigs without manual drudgery. I wanted to self-host it on my existing 4GB Linode (already running GitHub runners) for control and cost (free core software, minimal VPS expense).
 
 The plan: Docker for isolation, Caddy for reverse proxy and HTTPS, Cloudflare for DNS and protection. Sounded straightforward... until it wasn't.
 
@@ -122,4 +122,4 @@ This journey reminded me why I love (and sometimes curse) self-hosting: full con
 - Always check firewalls first (UFW got me good).
 - n8n is powerful for automation (next up: Reddit gig scanner), but optimize for initial loads.
 
-If you're setting up n8n, give Cloudflare Tunnel a shot – it saved my sanity. Drop a comment if you have questions or your own war stories. Until next time, keep coding!
+If you're setting up n8n, give Cloudflare Tunnel a shot – it saved my sanity. Until next time, keep coding!

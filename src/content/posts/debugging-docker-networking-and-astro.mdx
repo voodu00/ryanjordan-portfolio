@@ -1,0 +1,103 @@
+---
+title: 'Debugging Docker Networking and Astro Binding Issues'
+description: 'A self-hosted saga of Docker networking, Astro binding issues, and GitHub Actions runner drama.'
+image: '../assets/docker-compose-issue.jpg'
+createdAt: 07-22-2025
+draft: false
+tags:
+  - guide
+  - docker
+  - astro
+---
+
+# Debugging Docker Networking and Astro Binding Issues: A Self-Hosted Saga
+
+If you've been following my adventures in self-hosting, you know I'm all about that DIY vibe—running my own servers, tweaking Docker setups, and wrestling with reverse proxies like Caddy. Recently, I dove headfirst into a classic troubleshooting rabbit hole while deploying my portfolio site (built with Astro) on my Linode server. What started as a simple "why isn't my site loading?" turned into a deep dive on Docker networking, health checks, and a sneaky binding issue in Astro's SSR mode. Oh, and to top it off, I had to juggle some GitHub Actions runner drama because, well, credits don't grow on trees. Let's break it down step by step, so you can avoid the same pitfalls. Trust me, the water's warm once you fix the leaks! 🏊‍♂️
+
+## The Setup: Multi-Site Magic with Docker and Caddy
+
+For context, I'm hosting multiple sites on a single Linode instance using Docker Compose. Caddy acts as my reverse proxy, handling TLS, redirects, and proxying traffic to various backend containers. My `ryanjordan.dev` domain points to an Astro app running in SSR mode for that sweet dynamic goodness. The Docker network is a custom bridge called "web," and everything _should_ talk nicely over container names.
+
+But nope—visiting `ryanjordan.dev` just went to my `down for maintenance` page. Peeking at Caddy's logs revealed the culprit: endless "connection refused" errors during health checks to the Astro container at `ryanjordandev-v2-app-1:3000`. Caddy was trying to ping the root path (`/`) every 10 seconds, but it kept failing with "dial tcp 172.19.0.4:3000: connect: connection refused."
+
+First things first, I inspected the Docker network:
+
+```bash
+docker network inspect web
+```
+
+This confirmed all containers were attached, with IPs like 172.19.0.4 for the Astro app and 172.19.0.5 for Caddy. Networking looked solid—no firewall weirdness or misconfigs there.
+
+## Diving into Logs and Container Introspection
+
+Next up: Logs! The Caddy logs were screaming about the failed health checks, but the Astro app's logs seemed innocent at first glance:
+
+```bash
+docker logs --tail 50 ryanjordandev-v2-app-1
+```
+
+Output: "06:24:23 [@astrojs/node] Server listening on http://localhost:3000"
+
+Ah-ha! There's the gotcha. The app was binding to `localhost`, which means it's only accessible from _inside_ its own container. No wonder Caddy couldn't reach it over the Docker network—Caddy's requests from another container were hitting a wall.
+
+To confirm, I exec'd into the Astro container:
+
+```bash
+docker exec -it ryanjordandev-v2-app-1 sh
+```
+
+Tried to install net-tools for `netstat`, but ran into permission issues (running as non-root user—good for security, annoying for debugging). Switched to the Caddy container and tested connectivity with curl:
+
+```bash
+docker exec -it server-management-caddy-1 sh
+apk add curl
+curl http://ryanjordandev-v2-app-1:3000/
+```
+
+Boom: "Failed to connect to ryanjordandev-v2-app-1 port 3000." Classic connection refused.
+
+## The Fix: Binding Astro to All Interfaces
+
+The root issue? Astro's Node adapter in standalone mode defaults to 'localhost' unless told otherwise. The solution was dead simple: Set the `HOST` environment variable to `0.0.0.0` in the docker-compose.yml for the app service.
+
+Updated snippet:
+
+```yaml
+services:
+  app:
+    image: krjordan/ryanjordan-portfolio:latest
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOST=0.0.0.0 # Bind to all interfaces for Docker networking
+    networks:
+      - web
+```
+
+Restarted with:
+
+```bash
+docker compose up -d --force-recreate
+```
+
+New logs showed the server listening on `0.0.0.0:3000`, and curl from Caddy now returned the site's HTML. Health checks passed, and `ryanjordan.dev` was live! 🎉
+
+Pro tip: If your Astro config has a hardcoded `host: 'localhost'` in the adapter options, yank it out or set `host: true` to respect env vars.
+
+## Bonus Round: GitHub Actions Runners and Credit Crunch
+
+While all this was going down, I was deploying updates via GitHub Actions. But self-hosted runners are repo-specific on personal accounts (no global sharing without an org), so I had to spin up separate ones for each project. And then... I ran out of GitHub's hosted runner credits. Oof.
+
+Solution? Added another self-hosted runner on a spare server. It's straightforward: Download the runner package from GitHub's instructions, config it with `./config.sh --url https://github.com/<username>/<repo> --token <TOKEN>`, and run as a service. Now I've got redundancy across machines—no more credit worries. If you're hitting limits too, consider migrating repos to a free GitHub org for org-level runners.
+
+## Wrapping Up: Lessons from the Trench
+
+Troubleshooting self-hosted setups is equal parts frustrating and rewarding. Key takeaways:
+
+- **Always check binding addresses** in containerized apps—`localhost` is your enemy in Docker networks.
+- **Logs are your best friend**: Tail them early and often.
+- **Env vars save the day**: Simple tweaks like `HOST=0.0.0.0` can fix big headaches.
+- Scale runners wisely to avoid credit burnout.
+
+If you're running into similar issues with Astro, Docker, or GitHub Actions, hopefully this helps. Until next time, happy hosting! 🚀
